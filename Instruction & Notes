@@ -1,0 +1,7 @@
+# Meshing automation notes
+
+In openFOAM 2412 wsl, i have been trying to mesh DrivAER model with the references from "https://www.sciencedirect.com/science/article/pii/S0167610524000746#sec3".
+
+Geometry has been imported to blender and stls have been created for the domain without the tire holes and exported in ascii batch mode.
+
+in openFOAM case directory symlinks have been created in "constat/triSurface" for the stls included.
