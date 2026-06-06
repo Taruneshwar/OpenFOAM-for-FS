@@ -117,16 +117,16 @@ echo ""
 echo " Writing bounds to $BLOCKMESH ..."
 
 sed -i \
-    -e "s/^bx_min .*/bx_min $GLOBAL_XMIN;/" \
-    -e "s/^bx_max .*/bx_max $GLOBAL_XMAX;/" \
-    -e "s/^by_min .*/by_min $GLOBAL_YMIN;/" \
-    -e "s/^by_max .*/by_max $GLOBAL_YMAX;/" \
-    -e "s/^bz_min .*/bz_min $GLOBAL_ZMIN;/" \
-    -e "s/^bz_max .*/bz_max $GLOBAL_ZMAX;/" \
+    -e "s/^bbox_xmin .*/bbox_xmin $GLOBAL_XMIN;/" \
+    -e "s/^bbox_xmax .*/bbox_xmax $GLOBAL_XMAX;/" \
+    -e "s/^bbox_ymin .*/bbox_ymin $GLOBAL_YMIN;/" \
+    -e "s/^bbox_ymax .*/bbox_ymax $GLOBAL_YMAX;/" \
+    -e "s/^bbox_zmin .*/bbox_zmin $GLOBAL_ZMIN;/" \
+    -e "s/^bbox_zmax .*/bbox_zmax $GLOBAL_ZMAX;/" \
     "$BLOCKMESH"
 
 echo " Done. blockMeshDict updated:"
 echo ""
-grep -E "^b[xyz]_(min|max)" "$BLOCKMESH"
+grep -E "^bbox_" "$BLOCKMESH"
 echo ""
 echo "============================================"
