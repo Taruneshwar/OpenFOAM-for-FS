@@ -1,6 +1,6 @@
 #!/bin/bash
 # Silence all subsequent outputs inside this script
-exec > /dev/null 2>&1
+#exec > /dev/null 2>&1
 
 # ============================================================
 # STL Bounding Box Extractor
@@ -12,6 +12,7 @@ exec > /dev/null 2>&1
 STL_DIR="./constant/triSurface/"
 EXCLUDE_KEYWORD="body"
 BLOCKMESH="./system/blockMeshDict"
+SNAPPYHEXMESH="./system/snappyHexMeshDict"
 PADDING=0.0          # extra buffer added around the bounding box
 
 # --- Initialize min/max trackers ---
@@ -128,5 +129,19 @@ sed -i \
 echo " Done. blockMeshDict updated:"
 echo ""
 grep -E "^bbox_" "$BLOCKMESH"
+
+sed -i \
+    -e "s/^bbox_xmin .*/bbox_xmin $GLOBAL_XMIN;/" \
+    -e "s/^bbox_xmax .*/bbox_xmax $GLOBAL_XMAX;/" \
+    -e "s/^bbox_ymin .*/bbox_ymin $GLOBAL_YMIN;/" \
+    -e "s/^bbox_ymax .*/bbox_ymax $GLOBAL_YMAX;/" \
+    -e "s/^bbox_zmin .*/bbox_zmin $GLOBAL_ZMIN;/" \
+    -e "s/^bbox_zmax .*/bbox_zmax $GLOBAL_ZMAX;/" \
+    "$SNAPPYHEXMESH"
+
+echo " Done. blockMeshDict updated:"
+echo ""
+grep -E "^bbox_" "$SNAPPYHEXMESH"
+
 echo ""
 echo "============================================"
