@@ -5,6 +5,6 @@ In openFOAM 2412 wsl, i have been trying to mesh DrivAER model with the referenc
 Geometry has been imported to blender and stls have been created for the domain without the tire holes and exported in ascii batch mode.
 
 In openFOAM case directory symlinks have been created in "constat/triSurface" for the stls included.
-Inorder to do this with ease, use "for f in source/directory/path/*.stl; do ln -f "$f" target/directory/constant/triSurface/; done"
+Inorder to do this with ease, use "for f in source/directory/path/*.stl; do ln -s "$f" target/directory/constant/triSurface/; done"
 
 Creating a bash file that calculates the min & max values to create a blockMesh....
