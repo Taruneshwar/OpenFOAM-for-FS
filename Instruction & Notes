@@ -7,4 +7,4 @@ Geometry has been imported to blender and stls have been created for the domain 
 In openFOAM case directory symlinks have been created in "constat/triSurface" for the stls included.
 Inorder to do this with ease, use "for f in source/directory/path/*.stl; do ln -s "$f" target/directory/constant/triSurface/; done"
 
-Creating a bash file that calculates the min & max values to create a blockMesh....
+Created a bash file (bounds_extractor.sh) that calculates the min & max values to blockMesh
