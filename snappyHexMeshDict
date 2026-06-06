@@ -15,11 +15,11 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-bbox_xmin -2700;
-bbox_ymin -2970.29;
+bbox_xmin -8974.62;
+bbox_ymin -2700;
 bbox_zmin -177.298;
-bbox_xmax 2700;
-bbox_ymax 8974.62;
+bbox_xmax 2970.29;
+bbox_ymax 2700;
 bbox_zmax 2985.03;
 
 cell_size_mm     8;
@@ -243,9 +243,47 @@ castellatedMeshControls
             level               ( 2 3 );
             patchInfo
             {
-                type    patch;
+                type    wall;
             }
         }
+
+        frontLeftTire
+        {
+            level               ( 2 3 );
+            patchInfo
+            {
+                type    wall;
+            }
+        }
+
+        frontRightTire
+        {
+            level               ( 2 3 );
+            patchInfo
+            {
+                type    wall;
+            }
+        }
+
+        rearLeftTire
+        {
+            level               ( 2 3 );
+            patchInfo
+            {
+                type    wall;
+            }
+        }
+
+        rearRightTire
+        {
+            level               ( 2 3 );
+            patchInfo
+            {
+                type    wall;
+            }
+        }
+
+
 
     }
 
