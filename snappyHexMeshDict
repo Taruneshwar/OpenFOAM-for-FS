@@ -15,21 +15,35 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-bbox_xmin -576.603;
-bbox_ymin -227.508;
+bbox_xmin -8974.62;
+bbox_ymin -2700;
 bbox_zmin -177.298;
-bbox_xmax 576.603;
-bbox_ymax 227.508;
-bbox_zmax 177.298;
+bbox_xmax 2970.29;
+bbox_ymax 2700;
+bbox_zmax 2985.03;
+
+geo_xmin -576.603;
+geo_ymin -227.508;
+geo_zmin -177.298;
+geo_xmax 576.603;
+geo_ymax 227.508;
+geo_zmax 177.298;
 
 cell_size_mm     10;
 
-xmin             #calc "$bbox_xmin - ( 2000.123456789 * $cell_size_mm )";
-ymin             #calc "$bbox_ymin - ( 2.123456789 * $cell_size_mm )";
-zmin             #calc "$bbox_zmin - ( 2.123456789 * $cell_size_mm )";
-xmax             #calc "$bbox_xmax + ( 2.123456789 * $cell_size_mm )";
-ymax             #calc "$bbox_ymax + ( 2.123456789 * $cell_size_mm )";
-zmax             #calc "$bbox_zmax + ( 2.123456789 * $cell_size_mm )";
+xmin             #calc "$bbox_xmin - ( 1.123456789* $cell_size_mm )";
+ymin             #calc "$bbox_ymin - ( 1.123456789* $cell_size_mm )";
+zmin             #calc "$bbox_zmin - ( 1.123456789* $cell_size_mm )";
+xmax             #calc "$bbox_xmax + ( 1.123456789* $cell_size_mm )";
+ymax             #calc "$bbox_ymax + ( 1.123456789* $cell_size_mm )";
+zmax             #calc "$bbox_zmax + ( 1.123456789* $cell_size_mm )";
+
+boi_xmin         #calc "$geo_xmin - ( 1.123456789* $cell_size_mm *100 )";
+boi_ymin         #calc "$geo_ymin - ( 1.123456789* $cell_size_mm )";
+boi_zmin         #calc "$geo_zmin - ( 1.123456789* $cell_size_mm )";
+boi_xmax         #calc "$geo_xmax + ( 1.123456789* $cell_size_mm )";
+boi_ymax         #calc "$geo_ymax + ( 1.123456789* $cell_size_mm )";
+boi_zmax         #calc "$geo_zmax + ( 1.123456789* $cell_size_mm )";
 
 singleRegionName  true;
 

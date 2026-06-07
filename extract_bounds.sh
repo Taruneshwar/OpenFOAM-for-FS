@@ -1,11 +1,10 @@
 #!/bin/bash
-# Silence all subsequent outputs inside this script
-#exec > /dev/null 2>&1
 
 # ============================================================
-# STL Bounding Box Extractor v2
+# STL Bounding Box Extractor v3
 # - Full bounds (all STLs except excluded) -> blockMeshDict
 # - Geometry bounds (explicit include list) -> snappyHexMeshDict
+# Writes each variable ONCE by targeting specific line numbers
 # ============================================================
 
 # --- Configuration ---
@@ -13,11 +12,10 @@ STL_DIR="./constant/triSurface/"
 BLOCKMESH="./system/blockMeshDict"
 SNAPPYHEXMESH="./system/snappyHexMeshDict"
 
-# Keywords excluded from blockMesh bounds (case insensitive, use | for multiple)
+# Keywords excluded from blockMesh bounds
 EXCLUDE_BLOCKMESH="body"
 
-# Explicit list of STLs to include for snappyHexMesh geometry bounds
-# Must match filenames exactly (case insensitive comparison is applied)
+# Explicit list of STLs for snappyHexMesh geometry bounds
 SNAPPY_INCLUDE=(
     "drivaerBody.stl"
     "frontLeftTire.stl"
@@ -30,17 +28,16 @@ SNAPPY_INCLUDE=(
 # --- DO NOT EDIT BELOW THIS LINE ---
 # ============================================================
 
-# --- Initialize BLOCKMESH bounds ---
+# --- Initialize bounds ---
 GLOBAL_XMIN=999999999;  GLOBAL_XMAX=-999999999
 GLOBAL_YMIN=999999999;  GLOBAL_YMAX=-999999999
 GLOBAL_ZMIN=999999999;  GLOBAL_ZMAX=-999999999
 
-# --- Initialize SNAPPY bounds ---
 GEO_XMIN=999999999;  GEO_XMAX=-999999999
 GEO_YMIN=999999999;  GEO_YMAX=-999999999
 GEO_ZMIN=999999999;  GEO_ZMAX=-999999999
 
-# --- Helper: case-insensitive include list check ---
+# --- Helper: case-insensitive include check ---
 in_snappy_include() {
     local target="${1,,}"
     for item in "${SNAPPY_INCLUDE[@]}"; do
@@ -51,7 +48,7 @@ in_snappy_include() {
     return 1
 }
 
-# --- Helper: extract bounds from single STL file ---
+# --- Helper: extract bounds from single STL ---
 extract_bounds() {
     grep -i "vertex" "$1" | awk '
     BEGIN {
@@ -73,9 +70,36 @@ extract_bounds() {
     }'
 }
 
-# --- Helper: update min/max pair ---
-update_min() { awk "BEGIN {print ($1 < $2) ? $1 : $2}"; }
-update_max() { awk "BEGIN {print ($1 > $2) ? $1 : $2}"; }
+# --- Helper: write a variable to FIRST occurrence only ---
+# Usage: write_first_occurrence "varname" "value" "file"
+write_first_occurrence() {
+    local varname="$1"
+    local value="$2"
+    local file="$3"
+
+    # Find the line number of the FIRST occurrence
+    local lineno
+    lineno=$(grep -n "\b${varname}\b" "$file" | head -1 | cut -d: -f1)
+
+    if [ -z "$lineno" ]; then
+        echo "  [WARNING] '$varname' not found in $file"
+        return 1
+    fi
+
+    # Replace only that specific line number
+    sed -i "${lineno}s/.*/$(grep -m1 "\b${varname}\b" "$file" | sed "s/\b${varname}\b.*/${varname} ${value};/" | sed 's/[[:space:]]*//')/" "$file"
+
+    # Simpler and more reliable — use awk to replace only line N
+    awk -v n="$lineno" -v name="$varname" -v val="$value" \
+        'NR==n { 
+            # preserve leading whitespace
+            match($0, /^[[:space:]]*/); 
+            indent=substr($0, RSTART, RLENGTH);
+            print indent name " " val ";"
+            next
+        } 
+        { print }' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+}
 
 # ============================================================
 # --- Sanity checks ---
@@ -96,7 +120,6 @@ if [ ! -f "$SNAPPYHEXMESH" ]; then
     exit 1
 fi
 
-# Check STL files exist
 shopt -s nullglob
 stl_files=("$STL_DIR"/*.stl)
 if [ ${#stl_files[@]} -eq 0 ]; then
@@ -104,33 +127,18 @@ if [ ${#stl_files[@]} -eq 0 ]; then
     exit 1
 fi
 
-# Check geo_ placeholders exist in snappyHexMeshDict
-#if ! grep -q "geo_xmin" "$SNAPPYHEXMESH"; then
-#    echo "ERROR: geo_xmin placeholder not found in $SNAPPYHEXMESH"
-#    echo "       Add the following lines to your snappyHexMeshDict:"
-#    echo ""
-#    echo "       geo_xmin 0;"
-#    echo "       geo_xmax 0;"
-#    echo "       geo_ymin 0;"
-#    echo "       geo_ymax 0;"
-#    echo "       geo_zmin 0;"
-#    echo "       geo_zmax 0;"
-#    echo ""
-#    exit 1
-#fi
-
-# Check bbox_ placeholders exist in blockMeshDict
 if ! grep -q "bbox_xmin" "$BLOCKMESH"; then
-    echo "ERROR: bbox_xmin placeholder not found in $BLOCKMESH"
-    echo "       Add the following lines to your blockMeshDict:"
-    echo ""
-    echo "       bbox_xmin 0;"
-    echo "       bbox_xmax 0;"
-    echo "       bbox_ymin 0;"
-    echo "       bbox_ymax 0;"
-    echo "       bbox_zmin 0;"
-    echo "       bbox_zmax 0;"
-    echo ""
+    echo "ERROR: bbox_xmin not found in $BLOCKMESH"
+    exit 1
+fi
+
+if ! grep -q "bbox_xmin" "$SNAPPYHEXMESH"; then
+    echo "ERROR: bbox_xmin not found in $SNAPPYHEXMESH"
+    exit 1
+fi
+
+if ! grep -q "geo_xmin" "$SNAPPYHEXMESH"; then
+    echo "ERROR: geo_xmin not found in $SNAPPYHEXMESH"
     exit 1
 fi
 
@@ -140,7 +148,7 @@ fi
 
 echo ""
 echo "============================================"
-echo " STL Bounding Box Extractor"
+echo " STL Bounding Box Extractor v3"
 echo "============================================"
 echo " STL Dir    : $STL_DIR"
 echo " BlockMesh  : $BLOCKMESH"
@@ -166,13 +174,13 @@ for f in "$STL_DIR"/*.stl; do
 
     filename=$(basename "$f")
 
-    # --- Skip binary STLs ---
+    # Skip binary STLs
     if ! grep -qi "vertex" "$f"; then
         echo "  [BINARY - SKIPPED]    $filename"
         continue
     fi
 
-    # --- Determine flags ---
+    # Determine flags
     use_blockmesh=false
     use_snappy=false
 
@@ -184,13 +192,13 @@ for f in "$STL_DIR"/*.stl; do
         use_snappy=true
     fi
 
-    # --- Skip if neither ---
+    # Skip if neither
     if ! $use_blockmesh && ! $use_snappy; then
         echo "  [SKIPPED - BOTH]      $filename"
         continue
     fi
 
-    # --- Status label ---
+    # Status label
     if $use_blockmesh && $use_snappy; then
         label="[BOTH]               "
     elif $use_blockmesh; then
@@ -201,10 +209,9 @@ for f in "$STL_DIR"/*.stl; do
 
     echo "  $label $filename"
 
-    # --- Extract bounds ---
+    # Extract bounds
     read XMIN XMAX YMIN YMAX ZMIN ZMAX <<< $(extract_bounds "$f")
 
-    # --- Validate extraction succeeded ---
     if [ -z "$XMIN" ] || [ -z "$XMAX" ]; then
         echo "  [WARNING] Could not extract bounds from $filename, skipping"
         continue
@@ -215,7 +222,7 @@ for f in "$STL_DIR"/*.stl; do
     echo "             Z: [$ZMIN, $ZMAX]"
     echo ""
 
-    # --- Update blockMesh bounds ---
+    # Update blockMesh bounds
     if $use_blockmesh; then
         GLOBAL_XMIN=$(awk "BEGIN {print ($XMIN < $GLOBAL_XMIN) ? $XMIN : $GLOBAL_XMIN}")
         GLOBAL_XMAX=$(awk "BEGIN {print ($XMAX > $GLOBAL_XMAX) ? $XMAX : $GLOBAL_XMAX}")
@@ -226,7 +233,7 @@ for f in "$STL_DIR"/*.stl; do
         ((processed_blockmesh++))
     fi
 
-    # --- Update snappyHexMesh bounds ---
+    # Update snappy bounds
     if $use_snappy; then
         GEO_XMIN=$(awk "BEGIN {print ($XMIN < $GEO_XMIN) ? $XMIN : $GEO_XMIN}")
         GEO_XMAX=$(awk "BEGIN {print ($XMAX > $GEO_XMAX) ? $XMAX : $GEO_XMAX}")
@@ -240,26 +247,20 @@ for f in "$STL_DIR"/*.stl; do
 done
 
 # ============================================================
-# --- Validate results before writing ---
+# --- Validate ---
 # ============================================================
 
 if [ "$processed_blockmesh" -eq 0 ]; then
-    echo "WARNING: No STLs processed for blockMesh bounds"
-    echo "         Check EXCLUDE_BLOCKMESH pattern: '$EXCLUDE_BLOCKMESH'"
+    echo "WARNING: No STLs processed for blockMesh"
+    echo "         Check EXCLUDE_BLOCKMESH: '$EXCLUDE_BLOCKMESH'"
 fi
 
 if [ "$processed_snappy" -eq 0 ]; then
-    echo "WARNING: No STLs matched the SNAPPY_INCLUDE list"
-    echo "         Check filenames in SNAPPY_INCLUDE array"
-    echo "         Actual files in $STL_DIR:"
-    for f in "$STL_DIR"/*.stl; do
-        echo "           $(basename $f)"
-    done
-    echo ""
-    echo "         Your SNAPPY_INCLUDE list:"
-    for item in "${SNAPPY_INCLUDE[@]}"; do
-        echo "           $item"
-    done
+    echo "WARNING: No STLs matched SNAPPY_INCLUDE list"
+    echo "         Actual files found:"
+    for f in "$STL_DIR"/*.stl; do echo "           $(basename $f)"; done
+    echo "         Your include list:"
+    for item in "${SNAPPY_INCLUDE[@]}"; do echo "           $item"; done
     exit 1
 fi
 
@@ -270,60 +271,60 @@ fi
 echo "============================================"
 echo " BLOCKMESH BOUNDS ($processed_blockmesh files)"
 echo "============================================"
-echo "  X: [$GLOBAL_XMIN, $GLOBAL_XMAX]"
-echo "  Y: [$GLOBAL_YMIN, $GLOBAL_YMAX]"
-echo "  Z: [$GLOBAL_ZMIN, $GLOBAL_ZMAX]"
-echo "  X size: $(awk "BEGIN {print $GLOBAL_XMAX - $GLOBAL_XMIN}")"
-echo "  Y size: $(awk "BEGIN {print $GLOBAL_YMAX - $GLOBAL_YMIN}")"
-echo "  Z size: $(awk "BEGIN {print $GLOBAL_ZMAX - $GLOBAL_ZMIN}")"
+echo "  X: [$GLOBAL_XMIN, $GLOBAL_XMAX]  size: $(awk "BEGIN {print $GLOBAL_XMAX - $GLOBAL_XMIN}")"
+echo "  Y: [$GLOBAL_YMIN, $GLOBAL_YMAX]  size: $(awk "BEGIN {print $GLOBAL_YMAX - $GLOBAL_YMIN}")"
+echo "  Z: [$GLOBAL_ZMIN, $GLOBAL_ZMAX]  size: $(awk "BEGIN {print $GLOBAL_ZMAX - $GLOBAL_ZMIN}")"
 echo ""
 echo "============================================"
 echo " SNAPPYHEXMESH BOUNDS ($processed_snappy files)"
 echo "============================================"
-echo "  X: [$GEO_XMIN, $GEO_XMAX]"
-echo "  Y: [$GEO_YMIN, $GEO_YMAX]"
-echo "  Z: [$GEO_ZMIN, $GEO_ZMAX]"
-echo "  X size: $(awk "BEGIN {print $GEO_XMAX - $GEO_XMIN}")"
-echo "  Y size: $(awk "BEGIN {print $GEO_YMAX - $GEO_YMIN}")"
-echo "  Z size: $(awk "BEGIN {print $GEO_ZMAX - $GEO_ZMIN}")"
+echo "  X: [$GEO_XMIN, $GEO_XMAX]  size: $(awk "BEGIN {print $GEO_XMAX - $GEO_XMIN}")"
+echo "  Y: [$GEO_YMIN, $GEO_YMAX]  size: $(awk "BEGIN {print $GEO_YMAX - $GEO_YMIN}")"
+echo "  Z: [$GEO_ZMIN, $GEO_ZMAX]  size: $(awk "BEGIN {print $GEO_ZMAX - $GEO_ZMIN}")"
 echo "============================================"
 echo ""
 
 # ============================================================
-# --- Write to blockMeshDict ---
+# --- Write to blockMeshDict (first occurrence only) ---
 # ============================================================
 
 echo " Writing to $BLOCKMESH ..."
 
-sed -i \
-    -e "s/\bbbox_xmin\b.*/bbox_xmin $GLOBAL_XMIN;/" \
-    -e "s/\bbbox_xmax\b.*/bbox_xmax $GLOBAL_XMAX;/" \
-    -e "s/\bbbox_ymin\b.*/bbox_ymin $GLOBAL_YMIN;/" \
-    -e "s/\bbbox_ymax\b.*/bbox_ymax $GLOBAL_YMAX;/" \
-    -e "s/\bbbox_zmin\b.*/bbox_zmin $GLOBAL_ZMIN;/" \
-    -e "s/\bbbox_zmax\b.*/bbox_zmax $GLOBAL_ZMAX;/" \
-    "$BLOCKMESH"
+write_first_occurrence "bbox_xmin" "$GLOBAL_XMIN" "$BLOCKMESH"
+write_first_occurrence "bbox_xmax" "$GLOBAL_XMAX" "$BLOCKMESH"
+write_first_occurrence "bbox_ymin" "$GLOBAL_YMIN" "$BLOCKMESH"
+write_first_occurrence "bbox_ymax" "$GLOBAL_YMAX" "$BLOCKMESH"
+write_first_occurrence "bbox_zmin" "$GLOBAL_ZMIN" "$BLOCKMESH"
+write_first_occurrence "bbox_zmax" "$GLOBAL_ZMAX" "$BLOCKMESH"
 
 echo " Verification — blockMeshDict:"
 grep "bbox_" "$BLOCKMESH"
 echo ""
 
 # ============================================================
-# --- Write to snappyHexMeshDict ---
+# --- Write to snappyHexMeshDict (first occurrence only) ---
 # ============================================================
 
 echo " Writing to $SNAPPYHEXMESH ..."
 
-sed -i \
-    -e "s/\bbbox_xmin\b.*/bbox_xmin $GEO_XMIN;/" \
-    -e "s/\bbbox_xmax\b.*/bbox_xmax $GEO_XMAX;/" \
-    -e "s/\bbbox_ymin\b.*/bbox_ymin $GEO_YMIN;/" \
-    -e "s/\bbbox_ymax\b.*/bbox_ymax $GEO_YMAX;/" \
-    -e "s/\bbbox_zmin\b.*/bbox_zmin $GEO_ZMIN;/" \
-    -e "s/\bbbox_zmax\b.*/bbox_zmax $GEO_ZMAX;/" \
-    "$SNAPPYHEXMESH"
+write_first_occurrence "bbox_xmin" "$GLOBAL_XMIN" "$SNAPPYHEXMESH"
+write_first_occurrence "bbox_xmax" "$GLOBAL_XMAX" "$SNAPPYHEXMESH"
+write_first_occurrence "bbox_ymin" "$GLOBAL_YMIN" "$SNAPPYHEXMESH"
+write_first_occurrence "bbox_ymax" "$GLOBAL_YMAX" "$SNAPPYHEXMESH"
+write_first_occurrence "bbox_zmin" "$GLOBAL_ZMIN" "$SNAPPYHEXMESH"
+write_first_occurrence "bbox_zmax" "$GLOBAL_ZMAX" "$SNAPPYHEXMESH"
 
-echo " Verification — snappyHexMeshDict:"
+write_first_occurrence "geo_xmin" "$GEO_XMIN" "$SNAPPYHEXMESH"
+write_first_occurrence "geo_xmax" "$GEO_XMAX" "$SNAPPYHEXMESH"
+write_first_occurrence "geo_ymin" "$GEO_YMIN" "$SNAPPYHEXMESH"
+write_first_occurrence "geo_ymax" "$GEO_YMAX" "$SNAPPYHEXMESH"
+write_first_occurrence "geo_zmin" "$GEO_ZMIN" "$SNAPPYHEXMESH"
+write_first_occurrence "geo_zmax" "$GEO_ZMAX" "$SNAPPYHEXMESH"
+
+echo " Verification — snappyHexMeshDict bbox_:"
+grep "bbox_" "$SNAPPYHEXMESH"
+echo ""
+echo " Verification — snappyHexMeshDict geo_:"
 grep "geo_" "$SNAPPYHEXMESH"
 echo ""
 echo "============================================"
