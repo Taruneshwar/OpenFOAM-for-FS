@@ -19,3 +19,6 @@ SnappyHexMesh has been partly inspired by "https://www.wolfdynamics.com/wiki/mes
 "master_bash.sh" is the master bash file to run the whole snappy hex mesh.
 
 Attempteting to decompose the mesh and reconstruct.
+
+
+"https://gitlab-hpc.cineca.it/exafoam/spuma/-/blob/develop/src/parallel/decompose/kahipDecomp/Make/files?ref_type=heads"  Kahip decomposition for effectiveness.
