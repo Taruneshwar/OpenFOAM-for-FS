@@ -1,4 +1,12 @@
-# Meshing automation notes
+<div align="left">
+
+# Meshing Automation Progress
+
+![OpenFOAM](https://img.shields.io/badge/OpenFOAM-v2412-blue?style=flat-square)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20WSL-lightgrey?style=flat-square)
+![Language](https://img.shields.io/badge/scripts-Bash-89e051?style=flat-square)
+
+![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat-square)
 
 In openFOAM 2412 wsl, i have been trying to mesh DrivAER model with the references from "https://www.sciencedirect.com/science/article/pii/S0167610524000746#sec3".
 
