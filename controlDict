@@ -51,6 +51,8 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+
+// manually installed KaHIP decomposition library //
 libs
 (
     "libkahipDecomp.so"
