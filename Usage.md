@@ -67,6 +67,26 @@ Running "blockMesh" should create a basic background mesh with all the above ste
 
 SnappyHexMesh has been partly inspired by "https://www.wolfdynamics.com/wiki/meshing_OF_SHM.pdf" and my master thesis at Scania.
 
+---
+
+### Refinement Levels
+
+Edit [`system/snappyHexMeshDict`](system/snappyHexMeshDict):
+
+```cpp
+refinementSurfaces
+{
+    drivaerBody
+    {
+        level (2 3);    // (min max)
+    }
+    frontLeftTire
+    {
+        level (2 3);
+    }
+}
+```
+
 
 ## References
 
