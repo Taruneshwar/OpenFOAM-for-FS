@@ -15,16 +15,16 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-bbox_xmin -8974.62;
-bbox_ymin -2700;
+bbox_xmin -576.603;
+bbox_ymin -227.508;
 bbox_zmin -177.298;
-bbox_xmax 2970.29;
-bbox_ymax 2700;
-bbox_zmax 2985.03;
+bbox_xmax 576.603;
+bbox_ymax 227.508;
+bbox_zmax 177.298;
 
 cell_size_mm     8;
 
-xmin             #calc "$bbox_xmin - ( 1.123456789* $cell_size_mm )";
+xmin             #calc "$bbox_xmin - ( 1000.123456789* $cell_size_mm )";
 ymin             #calc "$bbox_ymin - ( 1.123456789* $cell_size_mm )";
 zmin             #calc "$bbox_zmin - ( 1.123456789* $cell_size_mm )";
 xmax             #calc "$bbox_xmax + ( 1.123456789* $cell_size_mm )";
@@ -101,12 +101,12 @@ geometry
 	name symmetry;
     }
 
-    refinementBox
-    {
-        type        searchableBox;
-        max         ($xmax  $ymax  $zmax);
-        min         ($xmin  $ymin  $zmin);
-    }
+//    refinementBox
+//    {
+//        type        searchableBox;
+//        max         ($xmax  $ymax  $zmax);
+//        min         ($xmin  $ymin  $zmin);
+//    }
 
 }
 
@@ -134,7 +134,7 @@ castellatedMeshControls
     // few cells. This setting will cause refinement to stop if <= minimumRefine
     // are selected for refinement. Note: it will at least do one iteration
     // (unless the number of cells to refine is 0)
-    minRefinementCells 10;
+    minRefinementCells 3;
 
     // Allow a certain level of imbalance during refining
     // (since balancing is quite expensive)
@@ -146,7 +146,7 @@ castellatedMeshControls
     // Number of buffer layers between different levels.
     // 1 means normal 2:1 refinement restriction, larger means slower
     // refinement.
-    nCellsBetweenLevels 3;
+    nCellsBetweenLevels 2;
 
 
 
@@ -159,27 +159,27 @@ castellatedMeshControls
     (
         {
             file "drivaerBody.eMesh";
-            level 6;
+            level 2;
         }
 
         {
             file "frontRightTire.eMesh";
-            level 6;
+            level 2;
         }
 
         {
             file "frontLeftTire.eMesh";
-            level 6;
+            level 2;
         }
  
         {
             file "rearRightTire.eMesh";
-            level 6;
+            level 2;
         }
  
         {
             file "rearLeftTire.eMesh";
-            level 6;
+            level 2;
         }
  
     );
@@ -200,7 +200,7 @@ castellatedMeshControls
         drivaerBody
         {
             // Surface-wise min and max refinement level
-            level (5 6);
+            level (2 3);
 
             // Optional specification of patch type (default is wall). No
             // constraint types (cyclic, symmetry) etc. are allowed.
@@ -309,7 +309,7 @@ castellatedMeshControls
         refinementBox
         {
             mode inside;
-            levels ((1E15 4));
+            levels ((1E15 2));
         }
     }
 
