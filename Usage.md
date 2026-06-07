@@ -12,7 +12,7 @@
 
 
 
-[Getting Started](#Overview) •
+[Overview](#Overview) •
 [Usage](#usage) •
 [Configuration](#configuration) •
 [Troubleshooting](#troubleshooting)
