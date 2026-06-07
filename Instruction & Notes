@@ -16,4 +16,6 @@ Running "blockMesh" should create a basic background mesh with all the above ste
 
 SnappyHexMesh has been partly inspired by "https://www.wolfdynamics.com/wiki/meshing_OF_SHM.pdf" and my master thesis at Scania.
 
+"master_bash.sh" is the master bash file to run the whole snappy hex mesh.
 
+Attempteting to decompose the mesh and reconstruct.
