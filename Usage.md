@@ -24,3 +24,12 @@ Running "blockMesh" should create a basic background mesh with all the above ste
 
 
 SnappyHexMesh has been partly inspired by "https://www.wolfdynamics.com/wiki/meshing_OF_SHM.pdf" and my master thesis at Scania.
+
+
+## References
+
+- [OpenFOAM Documentation](https://www.openfoam.com/documentation)
+- [snappyHexMesh User Guide](https://www.openfoam.com/documentation/guides/latest/doc/guide-meshing-snappyhexmesh.html)
+- [DrivAer Benchmark Geometry](https://www.aer.mw.tum.de/en/research-groups/automotive/drivaer/)
+- [shields.io — Badge Generator](https://shields.io)
+- 
