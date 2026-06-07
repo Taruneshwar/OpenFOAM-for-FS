@@ -1,4 +1,6 @@
 #!/bin/bash
+# Silence all subsequent outputs inside this script
+#exec > /dev/null 2>&1
 
 # ============================================================
 # STL Bounding Box Extractor v2
