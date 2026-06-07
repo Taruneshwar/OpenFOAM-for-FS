@@ -14,4 +14,6 @@ The cell sizes are also tuned for the sake of saving my pc from breaking it's ba
 Running "blockMesh" should create a basic background mesh with all the above steps followed
 
 
-SnappyHexMesh has been followed with "https://www.wolfdynamics.com/wiki/meshing_OF_SHM.pdf"
+SnappyHexMesh has been partly inspired by "https://www.wolfdynamics.com/wiki/meshing_OF_SHM.pdf" and my master thesis at Scania.
+
+
