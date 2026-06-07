@@ -22,14 +22,14 @@ bbox_xmax 576.603;
 bbox_ymax 227.508;
 bbox_zmax 177.298;
 
-cell_size_mm     8;
+cell_size_mm     10;
 
-xmin             #calc "$bbox_xmin - ( 1000.123456789* $cell_size_mm )";
-ymin             #calc "$bbox_ymin - ( 1.123456789* $cell_size_mm )";
-zmin             #calc "$bbox_zmin - ( 1.123456789* $cell_size_mm )";
-xmax             #calc "$bbox_xmax + ( 1.123456789* $cell_size_mm )";
-ymax             #calc "$bbox_ymax + ( 1.123456789* $cell_size_mm )";
-zmax             #calc "$bbox_zmax + ( 1.123456789* $cell_size_mm )";
+xmin             #calc "$bbox_xmin - ( 2000.123456789 * $cell_size_mm )";
+ymin             #calc "$bbox_ymin - ( 2.123456789 * $cell_size_mm )";
+zmin             #calc "$bbox_zmin - ( 2.123456789 * $cell_size_mm )";
+xmax             #calc "$bbox_xmax + ( 2.123456789 * $cell_size_mm )";
+ymax             #calc "$bbox_ymax + ( 2.123456789 * $cell_size_mm )";
+zmax             #calc "$bbox_zmax + ( 2.123456789 * $cell_size_mm )";
 
 singleRegionName  true;
 
