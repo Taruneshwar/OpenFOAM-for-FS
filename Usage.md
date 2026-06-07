@@ -3,9 +3,10 @@
 # Meshing Automation Progress
 
 
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20WSL-lightgrey?style=flat-square)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20WSL-orange?style=flat-square)
 ![OpenFOAM](https://img.shields.io/badge/OpenFOAM-v2412-blue?style=flat-square)
 ![Language](https://img.shields.io/badge/scripts-Bash-89e051?style=flat-square)
+![Language](https://img.shields.io/badge/python-3670A0?style=flat-square&logo=python&logoColor=ffdd54)
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat-square)
 
