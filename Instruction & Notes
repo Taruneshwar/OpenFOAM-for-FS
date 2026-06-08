@@ -30,3 +30,11 @@ Followed by snappyHexMesh in parallel (this can be avoided with serial) with -ov
 
 This mesh is then later reconstructed, renumberes and scale the mesh to meters using transformPoints and -scale flag.
 
+In the process of refiening, the DrivAER body has been scaled (4 2 2) with more emphasis on the flow direction and has been transformed and used as a refinementSurface (boi).
+
+The inlet outlet symmetry has been reduced in max refinement to better match the farfield flow away from the body.
+
+All systems working now, upuntil volume mesh and the next step will be trying to run a solver and get priliminary results and map the required results.
+
+
+
