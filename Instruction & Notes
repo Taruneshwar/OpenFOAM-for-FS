@@ -42,4 +42,4 @@ All systems working now, upuntil volume mesh and the next step will be trying to
 
 ##Solver notes
 
-'''foamDictionary constant/polyMesh/boundary -keywords -entry entry0''' is usefull to extract the boundaries included for automation.
+```foamDictionary constant/polyMesh/boundary -keywords -entry entry0´´´ is usefull to extract the boundaries included for automation.
