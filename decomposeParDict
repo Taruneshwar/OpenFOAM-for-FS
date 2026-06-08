@@ -16,15 +16,15 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-numberOfSubdomains  4;      // match your core count
+numberOfSubdomains	2;      // match your core count
 
 
-method                      kahip;
+method                  kahip;
 
 
 kahipCoeffs
 {
-    numberOfSubdomains  4;
+    numberOfSubdomains  2;
     mode                FAST;       // FAST, ECO, STRONG
     imbalance           0.01;
 //    verbose             false;
