@@ -4,6 +4,8 @@ In openFOAM 2412 wsl, i have been trying to mesh DrivAER model with the referenc
 
 "https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2412?ref_type=tags"
 
+All the openFOAM operations have been done with opeFOAM pre loaded in the bash file, if this is not hte case this has to be done before running every operation or add include the command in the bash run files.
+
 Geometry has been imported to blender and stls have been created for the domain without the tire holes at contact patch and exported in ascii batch mode with 1000 scale (in mm).
 
 In openFOAM case directory symlinks have been created in "constat/triSurface" for the stls included.
