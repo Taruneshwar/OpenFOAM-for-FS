@@ -7,7 +7,7 @@
 
 # --- Configuration ---
 LOG_DIR="./logs"
-STL_SOURCE="./../stlGeometry/stlExport"
+STL_SOURCE="./../stlGeometry"
 TRISURFACE_DIR="./constant/triSurface"
 BOUNDS_SCRIPT="./extract_bounds.sh"
 
@@ -263,12 +263,61 @@ fi
 run_step "blockMesh" "05_blockMesh.log" blockMesh
 
 # ============================================================
-# --- Step 6: snappyHexMesh ---
+# --- Step 6: decomposePar Mesh (KaHIP) ---
 # ============================================================
 
-print_header "Step 6: snappyHexMesh"
+print_header "Step 6: decomposePar"
 
-run_step "snappyHexMesh" "06_snappyHexMesh.log" snappyHexMesh -overwrite
+run_step "decomposePar" "06_decomposeParMesh.log" decomposePar
+
+# ============================================================
+# --- Step 7: snappyHexMesh (parallel) ---
+# ============================================================
+
+print_header "Step 7: snappyHexMesh"
+
+run_step "snappyHexMesh" "07_snappyHexMesh.log" mpirun -np 2 snappyHexMesh -overwrite -parallel
+
+# ============================================================
+# --- Step 8: reconstructParMesh ---
+# ============================================================
+
+print_header "Step 8: reconstructParMesh"
+
+run_step "reconstructParMesh" "08_reconstructParMesh.log" reconstructParMesh -constant
+
+# ============================================================
+# --- Step 9: renumberMesh ---
+# ============================================================
+
+print_header "Step 9: renumberMesh"
+
+run_step "renumberMesh" "09_renumberMesh.log" renumberMesh -overwrite
+
+# ============================================================
+# --- Step 10: transformpoints ---
+# ============================================================
+
+print_header "Step 10: transformPoints"
+
+run_step "transformPoints" "10_transformPoints.log" transformPoints -scale 0.001
+
+# ============================================================
+# --- Step 11: checkMesh ---
+# ============================================================
+
+print_header "Step 11: checkMesh"
+
+run_step "checkMesh" "11_checkMesh.log" checkMesh -writeAllFields
+
+
+## ============================================================
+## --- Step 7: checkMesh ---
+## ============================================================
+#
+#print_header "Step 7: checkMesh"
+#
+#run_step "checkMesh" "07_checkMesh.log" checkMesh
 
 # ============================================================
 # --- Summary ---
