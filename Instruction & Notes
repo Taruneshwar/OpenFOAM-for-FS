@@ -1,4 +1,6 @@
-# Meshing automation notes
+# Meshing & solver automation notes
+
+##Meshing notes
 
 In openFOAM 2412 wsl, i have been trying to mesh DrivAER model with the references from "https://www.sciencedirect.com/science/article/pii/S0167610524000746#sec3".
 
@@ -38,5 +40,6 @@ The inlet outlet symmetry has been reduced in max refinement to better match the
 
 All systems working now, upuntil volume mesh and the next step will be trying to run a solver and get priliminary results and map the required results.
 
+##Solver notes
 
-
+'''foamDictionary constant/polyMesh/boundary -keywords -entry entry0''' is usefull to extract the boundaries included for automation.
