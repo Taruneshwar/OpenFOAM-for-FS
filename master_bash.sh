@@ -311,14 +311,6 @@ print_header "Step 11: checkMesh"
 run_step "checkMesh" "11_checkMesh.log" checkMesh -writeAllFields
 
 
-## ============================================================
-## --- Step 7: checkMesh ---
-## ============================================================
-#
-#print_header "Step 7: checkMesh"
-#
-#run_step "checkMesh" "07_checkMesh.log" checkMesh
-
 # ============================================================
 # --- Summary ---
 # ============================================================
