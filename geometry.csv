@@ -1,0 +1,11 @@
+doe_id,stl_file,stl_path,boundary_type,refinement_min,refinement_max,layers
+-1,drivaerBody.stl,../../stlGeometry/drivaerBody.stl,wall,5,6,yes
+-1,frontLeftTire.stl,../../stlGeometry/frontLeftTire.stl,wall,2,3,yes
+-1,frontRightTire.stl,../../stlGeometry/frontRightTire.stl,wall,2,3,yes
+-1,inlet.stl,../../stlGeometry/inlet.stl,inlet,1,2,no
+-1,outlet.stl,../../stlGeometry/outlet.stl,outlet,1,2,no
+-1,rearLeftTire.stl,../../stlGeometry/rearLeftTire.stl,wall,2,3,yes
+-1,rearRightTire.stl,../../stlGeometry/rearRightTire.stl,wall,2,3,yes
+-1,road.stl,../../stlGeometry/road.stl,wall,1,2,yes
+-1,symmetry.stl,../../stlGeometry/symmetry.stl,symmetry,1,2,no
+2,symmetry.stl,../../stlGeometry/symmetry.stl,symmetry,2,3,no
