@@ -254,7 +254,7 @@ castellatedMeshControls
             level               ( 1 2 );
             patchInfo
             {
-                type    patch;
+                type    symmetry;
             }
         }
 
