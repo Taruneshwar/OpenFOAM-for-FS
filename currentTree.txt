@@ -1,0 +1,65 @@
+006-python_progression
+├── stlGeometry
+│   ├── drivaerBody.stl
+│   ├── frontLeftTire.stl
+│   ├── frontRightTire.stl
+│   ├── inlet.stl
+│   ├── outlet.stl
+│   ├── rearLeftTire.stl
+│   ├── rearRightTire.stl
+│   ├── road.stl
+│   ├── symmetry.stl
+│   └── drivaerBody_boi.stl
+└── testcase
+    ├── logs
+    ├── 0.orig
+    │   ├── U
+    │   ├── include
+    │   │   ├── fixedInlet
+    │   │   ├── frontBackUpperPatches
+    │   │   └── initialConditions
+    │   ├── k
+    │   ├── nut
+    │   ├── omega
+    │   └── p
+    ├── constant
+    │   ├── transportProperties
+    │   ├── triSurface
+    │   └── turbulenceProperties
+    ├── scripts
+    │   └── bashJobs
+    │       ├── 11_mesh_local.sh
+    │       ├── 1_mesh.sh
+    │       ├── __Allclean
+    │       ├── _extract_bounds.sh
+    │       ├── _preMesh.sh
+    │       └── master_bash.sh
+    └── system
+        ├── blockMeshDict
+        ├── controlDict
+        ├── cuttingPlane
+        ├── decomposeParDict
+        ├── decomposeParDict-random
+        ├── decomposeParDict.6
+        ├── decomposeParDict:Zone.Identifier
+        ├── ensightWrite
+        ├── finite-area
+        │   ├── faMeshDefinition
+        │   ├── faSchemes
+        │   └── faSolution
+        ├── foamReport
+        ├── forceCoeffs
+        ├── fvSchemes
+        ├── fvSolution
+        ├── graphFunctionObject
+        ├── meshQualityDict
+        ├── myReportTemplate.md
+        ├── profiling
+        ├── snappyHexMeshDict
+        ├── solverInfo
+        ├── streamLines
+        ├── surfaceFeatureExtractDict
+        ├── topoSetDict
+        └── wallBoundedStreamLines
+
+12 directories, 51 files
