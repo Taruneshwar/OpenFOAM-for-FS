@@ -38,7 +38,7 @@ xmax		#calc "$bbox_xmax + ( 1.123456789* $cell_size_mm )";
 ymax		#calc "$bbox_ymax + ( 1.123456789* $cell_size_mm )";
 zmax		#calc "$bbox_zmax + ( 1.123456789* $cell_size_mm )";
 
-boi_xmin	#calc "$geo_xmin - ( 1.123456789* $cell_size_mm )";
+boi_xmin	#calc "$geo_xmin - ( 100.123456789* $cell_size_mm )";
 boi_ymin	#calc "$geo_ymin - ( 1.123456789* $cell_size_mm )";
 boi_zmin	#calc "$geo_zmin - ( 1.123456789* $cell_size_mm )";
 boi_xmax	#calc "$geo_xmax + ( 1.123456789* $cell_size_mm )";
@@ -115,12 +115,18 @@ geometry
 	name symmetry;
     }
 
-//    refinementBox
-//    {
-//        type        searchableBox;
-//        max         ($xmax  $ymax  $zmax);
-//        min         ($xmin  $ymin  $zmin);
-//    }
+    drivaerBody_boi.stl
+    {
+        type triSurfaceMesh;
+        name drivaerBody_boi;
+    }
+ 
+    refinementBox
+    {
+        type        searchableBox;
+        max         ($boi_xmax  $boi_ymax  $boi_zmax);
+        min         ($boi_xmin  $boi_ymin  $boi_zmin);
+    }
 
 }
 
@@ -135,14 +141,14 @@ castellatedMeshControls
     // If local number of cells is >= maxLocalCells on any processor
     // switches from from refinement followed by balancing
     // (current method) to (weighted) balancing before refinement.
-    maxLocalCells 100000;
+    maxLocalCells 1000000;
 
     // Overall cell limit (approximately). Refinement will stop immediately
     // upon reaching this number so a refinement level might not complete.
     // Note that this is the number of cells before removing the part which
     // is not 'visible' from the keepPoint. The final number of cells might
     // actually be a lot less.
-    maxGlobalCells 2000000;
+    maxGlobalCells 20000000;
 
     // The surface refinement loop might spend lots of iterations refining just a
     // few cells. This setting will cause refinement to stop if <= minimumRefine
@@ -173,27 +179,27 @@ castellatedMeshControls
     (
         {
             file "drivaerBody.eMesh";
-            level 2;
+            level 6;
         }
 
         {
             file "frontRightTire.eMesh";
-            level 2;
+            level 6;
         }
 
         {
             file "frontLeftTire.eMesh";
-            level 2;
+            level 6;
         }
  
         {
             file "rearRightTire.eMesh";
-            level 2;
+            level 6;
         }
  
         {
             file "rearLeftTire.eMesh";
-            level 2;
+            level 6;
         }
  
     );
@@ -214,7 +220,7 @@ castellatedMeshControls
         drivaerBody
         {
             // Surface-wise min and max refinement level
-            level (2 3);
+            level (5 6);
 
             // Optional specification of patch type (default is wall). No
             // constraint types (cyclic, symmetry) etc. are allowed.
@@ -227,7 +233,7 @@ castellatedMeshControls
 
         inlet
         {
-            level               ( 2 3 );
+            level               ( 1 2 );
             patchInfo
             {
                 type    patch;
@@ -236,7 +242,7 @@ castellatedMeshControls
 
         outlet
         {
-            level               ( 2 3 );
+            level               ( 1 2 );
             patchInfo
             {
                 type    patch;
@@ -245,7 +251,7 @@ castellatedMeshControls
 
         symmetry
         {
-            level               ( 2 3 );
+            level               ( 1 2 );
             patchInfo
             {
                 type    patch;
@@ -320,11 +326,19 @@ castellatedMeshControls
 
     refinementRegions
     {
-        refinementBox
+
+//        refinementBox
+//        {
+//            mode inside;
+//            levels ((1E15 4));
+//        }
+
+        drivaerBody_boi
         {
             mode inside;
-            levels ((1E15 2));
+            levels ((1E15 4));
         }
+
     }
 
 
@@ -414,7 +428,7 @@ addLayersControls
     // Per final patch (so not geometry!) the layer information
     layers
     {
-        "(frontRightTire|drivaerBody).*"
+        "(frontRightTire|drivaerBody|frontLeftTire|rearRightTire|rearLeftTire).*"
         {
             nSurfaceLayers 2;
         }
