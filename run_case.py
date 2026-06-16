@@ -172,7 +172,7 @@ def ask_run_steps():
 
     print()
     print("Type step numbers separated by spaces, for example: 1 2")
-    print("Type all to select all steps.")
+    print("Type 'all' to select all steps.")
 
     while True:
         raw = input(prompt_text("\nRun steps: ")).strip().lower()
