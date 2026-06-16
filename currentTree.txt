@@ -1,6 +1,10 @@
-006-python_progression
+006-python_progression/
+├── pyFlowPilot
+│   └── context
+│       └── geometry.csv
 ├── stlGeometry
 │   ├── drivaerBody.stl
+│   ├── drivaerBody_boi.stl
 │   ├── frontLeftTire.stl
 │   ├── frontRightTire.stl
 │   ├── inlet.stl
@@ -8,10 +12,8 @@
 │   ├── rearLeftTire.stl
 │   ├── rearRightTire.stl
 │   ├── road.stl
-│   ├── symmetry.stl
-│   └── drivaerBody_boi.stl
+│   └── symmetry.stl
 └── testcase
-    ├── logs
     ├── 0.orig
     │   ├── U
     │   ├── include
@@ -26,6 +28,7 @@
     │   ├── transportProperties
     │   ├── triSurface
     │   └── turbulenceProperties
+    ├── logs
     ├── scripts
     │   └── bashJobs
     │       ├── 11_mesh_local.sh
@@ -62,4 +65,4 @@
         ├── topoSetDict
         └── wallBoundedStreamLines
 
-12 directories, 51 files
+14 directories, 52 files

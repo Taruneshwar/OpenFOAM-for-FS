@@ -115,10 +115,10 @@ geometry
 	name symmetry;
     }
 
-    drivaerBody_boi.stl
+    drivaerBody__boi.stl
     {
         type triSurfaceMesh;
-        name drivaerBody_boi;
+        name drivaerBody__boi;
     }
  
     refinementBox
@@ -333,7 +333,7 @@ castellatedMeshControls
 //            levels ((1E15 4));
 //        }
 
-        drivaerBody_boi
+        drivaerBody__boi
         {
             mode inside;
             levels ((1E15 4));
